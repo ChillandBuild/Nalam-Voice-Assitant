@@ -377,7 +377,7 @@ def run_pipeline(symptoms_text: str, detected_language: str = "en-IN"):
             st.write("📝 Text is already in English")
 
         # ── Step 2: Triage Assessment ───────────────────
-        st.write("🏥 Running WHO IMNCI triage assessment...")
+        st.write("🏥 Running clinical triage assessment...")
         triage_result = assess_symptoms(english_text)
         st.write(f"✅ Triage: **{triage_result['triage_level']}**")
 
@@ -613,7 +613,7 @@ with st.sidebar:
     st.markdown(
         "<div style='color:#64748b; font-size:0.8rem; text-align:center;'>"
         "Powered by Sarvam AI + Groq<br>"
-        "WHO IMNCI Guidelines<br>"
+        "Clinical Triage Guidelines<br>"
         "Built with ❤️ from Tamil Nadu"
         "</div>",
         unsafe_allow_html=True,

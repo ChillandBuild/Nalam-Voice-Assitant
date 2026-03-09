@@ -15,7 +15,7 @@ A user speaks patient symptoms in **their own language** — Nalam speaks back t
 🎙️ User speaks symptoms (any Indian language)
    ↓ Sarvam Saaras v3 (Speech → Text)
    ↓ Sarvam Mayura (Auto-translate → English)
-   ↓ WHO IMNCI Rule Engine (Triage assessment)
+   ↓ Clinical Triage Rules (Symptom assessment)
    ↓ Groq Llama 3.3 70B (Clinical explanation)
    ↓ Sarvam Mayura (English → Her language)
    ↓ Sarvam Bulbul v3 (Text → Speech)
@@ -95,7 +95,7 @@ Nalam/
 |-----------|-----------|
 | Voice I/O | Sarvam AI (Saaras v3 + Bulbul v3) |
 | Translation | Sarvam AI (Mayura) |
-| Clinical Logic | WHO IMNCI rules (Python) |
+| Clinical Logic | Clinical triage rules (Python) |
 | Explanations | Groq (Llama 3.3 70B) |
 | Web UI | Streamlit |
 | Audio | sounddevice + scipy |

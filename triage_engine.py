@@ -1,8 +1,8 @@
 """
-Triage Engine — Scans patient symptoms text against WHO IMNCI rules
+Triage Engine — Scans patient symptoms text against clinical triage rules
 and returns RED / YELLOW / GREEN triage decision.
 
-Pure Python — no API calls.
+Supports all age groups: adults, elderly, children, infants, pregnant women.
 """
 
 from rules.imnci_rules import (
@@ -46,7 +46,7 @@ def assess_symptoms(symptoms_text: str) -> dict:
     """
     Main triage function.
 
-    Takes English symptom text, matches against IMNCI rules,
+    Takes English symptom text, matches against clinical triage rules,
     returns triage result dictionary:
     {
         "triage_level": "RED" | "YELLOW" | "GREEN",
@@ -105,6 +105,9 @@ if __name__ == "__main__":
         "Mild cold and runny nose since morning",
         "I have severe headache and blurred vision and swollen feet",
         "The baby is not eating much",
+        "I have chest pain and sweating and shortness of breath",
+        "My father has sudden confusion and one sided weakness",
+        "Elderly patient with frequent falls and memory problems",
     ]
     for text in tests:
         result = assess_symptoms(text)

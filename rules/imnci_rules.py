@@ -1,6 +1,9 @@
 """
-WHO IMNCI (Integrated Management of Neonatal and Childhood Illness) Rules
-Encoded as Python data structures for the Nalam triage engine.
+Clinical Triage Rules — All Age Groups
+
+Comprehensive symptom-based triage rules covering:
+- Adults, elderly, children, infants, and pregnant women
+- Based on WHO emergency triage guidelines and general clinical practice
 
 Each rule set maps symptom keywords → triage level.
 The triage engine scans patient text for these keywords.
@@ -10,7 +13,7 @@ The triage engine scans patient text for these keywords.
 # RED FLAG — Immediate referral to hospital
 # ──────────────────────────────────────────────────────────
 RED_FLAG_SYMPTOMS = [
-    # Breathing danger signs
+    # ── Breathing & Respiratory Emergencies ──
     "difficulty breathing",
     "fast breathing",
     "chest indrawing",
@@ -19,24 +22,24 @@ RED_FLAG_SYMPTOMS = [
     "unable to breathe",
     "breathless",
     "gasping",
+    "choking",
+    "severe asthma",
+    "wheezing severely",
+    "turning blue",
+    "blue lips",
+    "cyanosis",
 
-    # Feeding danger signs
-    "unable to drink",
-    "unable to breastfeed",
-    "not able to drink",
-    "not able to breastfeed",
-    "cannot drink",
-    "cannot breastfeed",
-    "refusing to feed",
-    "stopped breastfeeding",
+    # ── Cardiac & Chest Emergencies ──
+    "chest pain",
+    "severe chest pain",
+    "crushing chest pain",
+    "chest tightness",
+    "heart attack",
+    "irregular heartbeat",
+    "palpitations with fainting",
+    "sudden collapse",
 
-    # Vomiting danger signs
-    "vomiting everything",
-    "vomits everything",
-    "continuous vomiting",
-    "persistent vomiting",
-
-    # Neurological danger signs
+    # ── Neurological Danger Signs ──
     "convulsions",
     "fits",
     "seizures",
@@ -48,9 +51,72 @@ RED_FLAG_SYMPTOMS = [
     "drowsy",
     "limp",
     "not waking up",
+    "sudden confusion",
+    "slurred speech",
+    "facial drooping",
+    "one sided weakness",
+    "sudden severe headache",
+    "paralysis",
+    "loss of consciousness",
+    "fainting",
+    "stroke symptoms",
+    "stiff neck",
+    "neck stiffness",
     "bulging fontanelle",
 
-    # Severe malnutrition
+    # ── Severe Bleeding & Trauma ──
+    "heavy bleeding",
+    "uncontrolled bleeding",
+    "bleeding wound",
+    "deep wound",
+    "severe injury",
+    "head injury",
+    "spinal injury",
+    "fracture",
+    "broken bone",
+    "severe burn",
+    "burn",
+    "poisoning",
+    "snake bite",
+    "animal bite",
+    "drowning",
+
+    # ── Gastrointestinal Emergencies ──
+    "vomiting everything",
+    "vomits everything",
+    "continuous vomiting",
+    "persistent vomiting",
+    "vomiting blood",
+    "blood in stool",
+    "bloody diarrhoea",
+    "bloody diarrhea",
+    "black stool",
+    "severe abdominal pain",
+    "rigid abdomen",
+
+    # ── Feeding / Intake Danger Signs ──
+    "unable to drink",
+    "unable to eat",
+    "unable to swallow",
+    "not able to drink",
+    "cannot drink",
+    "refusing to eat",
+    "refusing to feed",
+    "unable to breastfeed",
+    "not able to breastfeed",
+    "cannot breastfeed",
+    "stopped breastfeeding",
+
+    # ── Severe Dehydration ──
+    "sunken eyes",
+    "skin pinch goes back slowly",
+    "skin pinch very slowly",
+    "not passing urine",
+    "no urine",
+    "dry mouth",
+    "very thirsty",
+
+    # ── Severe Malnutrition ──
     "severe malnutrition",
     "visible wasting",
     "very thin",
@@ -60,17 +126,17 @@ RED_FLAG_SYMPTOMS = [
     "oedema both feet",
     "swelling both feet",
 
-    # Pregnancy danger signs
-    "severe headache",
-    "blurred vision",
-    "heavy bleeding",
-    "heavy discharge",
+    # ── Pregnancy & Obstetric Emergencies ──
+    "heavy bleeding in pregnancy",
+    "heavy vaginal bleeding",
     "fits in pregnancy",
     "convulsions in pregnancy",
     "high blood pressure",
-    "severe abdominal pain",
+    "blurred vision",
+    "severe headache",
+    "heavy discharge",
 
-    # Newborn danger signs
+    # ── Newborn / Infant Danger Signs ──
     "cold to touch",
     "yellow skin",
     "jaundice",
@@ -82,38 +148,31 @@ RED_FLAG_SYMPTOMS = [
     "very small baby",
     "premature",
 
-    # Dehydration danger signs
-    "sunken eyes",
-    "skin pinch goes back slowly",
-    "skin pinch very slowly",
-    "not passing urine",
-    "no urine",
-    "dry mouth",
-    "very thirsty",
-    "blood in stool",
-    "bloody diarrhoea",
+    # ── Allergic / Anaphylaxis ──
+    "severe allergic reaction",
+    "anaphylaxis",
+    "throat swelling",
+    "swollen tongue",
+    "difficulty swallowing",
+    "hives all over body",
 
-    # Other critical signs
-    "stiff neck",
-    "severe chest pain",
-    "poisoning",
-    "snake bite",
-    "animal bite",
-    "burn",
-    "severe burn",
-    "drowning",
-    "severe injury",
-    "deep wound",
-    "bleeding wound",
+    # ── Severe Infections ──
     "high fever with rash",
     "measles with complications",
+    "dengue warning signs",
+    "severe malaria",
+
+    # ── Mental Health Emergency ──
+    "suicidal thoughts",
+    "self harm",
+    "suicide attempt",
 ]
 
 # ──────────────────────────────────────────────────────────
-# YELLOW FLAG — Refer to PHC within 48 hours
+# YELLOW FLAG — Refer to health facility within 48 hours
 # ──────────────────────────────────────────────────────────
 YELLOW_FLAG_SYMPTOMS = [
-    # Fever
+    # ── Fever ──
     "fever more than 2 days",
     "fever for 3 days",
     "fever for 4 days",
@@ -125,31 +184,7 @@ YELLOW_FLAG_SYMPTOMS = [
     "fever not going down",
     "fever and shivering",
 
-    # Ear problems
-    "ear pain",
-    "ear discharge",
-    "ear infection",
-    "pus from ear",
-    "hearing problem",
-
-    # Prolonged diarrhoea
-    "diarrhoea more than 3 days",
-    "diarrhea more than 3 days",
-    "loose motions for days",
-    "watery stool for days",
-    "persistent diarrhoea",
-    "persistent diarrhea",
-
-    # Feeding problems
-    "not eating well",
-    "not eating properly",
-    "poor appetite",
-    "eating less",
-    "reduced appetite",
-    "loss of appetite",
-    "weight loss",
-
-    # Mild breathing
+    # ── Respiratory ──
     "mild fast breathing",
     "slightly fast breathing",
     "cough more than 3 weeks",
@@ -158,8 +193,70 @@ YELLOW_FLAG_SYMPTOMS = [
     "cough with phlegm",
     "night sweats",
     "cough with blood",
+    "wheezing",
+    "shortness of breath on exertion",
 
-    # Pregnancy concerns
+    # ── Ear / Nose / Throat ──
+    "ear pain",
+    "ear discharge",
+    "ear infection",
+    "pus from ear",
+    "hearing problem",
+    "sinus pain",
+    "persistent sore throat",
+    "difficulty swallowing food",
+    "hoarse voice for weeks",
+
+    # ── Gastrointestinal ──
+    "diarrhoea more than 3 days",
+    "diarrhea more than 3 days",
+    "loose motions for days",
+    "watery stool for days",
+    "persistent diarrhoea",
+    "persistent diarrhea",
+    "abdominal pain for days",
+    "bloating and pain",
+    "blood in urine",
+    "painful urination",
+    "burning urination",
+    "frequent urination",
+
+    # ── Appetite & Weight ──
+    "not eating well",
+    "not eating properly",
+    "poor appetite",
+    "eating less",
+    "reduced appetite",
+    "loss of appetite",
+    "weight loss",
+    "unexplained weight loss",
+
+    # ── Pain & Musculoskeletal ──
+    "headache for days",
+    "persistent headache",
+    "joint pain",
+    "body pain for days",
+    "back pain for days",
+    "severe back pain",
+    "swollen joints",
+    "joint swelling",
+    "chest pain on exertion",
+    "numbness",
+    "tingling",
+
+    # ── Skin & Eyes ──
+    "skin infection",
+    "boils",
+    "abscess",
+    "pus from wound",
+    "wound not healing",
+    "eye discharge",
+    "red eyes",
+    "eye infection",
+    "spreading rash",
+    "skin ulcer",
+
+    # ── Pregnancy Concerns ──
     "mild swelling feet",
     "swollen feet",
     "swollen legs",
@@ -170,7 +267,7 @@ YELLOW_FLAG_SYMPTOMS = [
     "spotting",
     "mild bleeding",
 
-    # Anaemia signs
+    # ── Anaemia & General ──
     "pale palms",
     "pale eyes",
     "pale nails",
@@ -179,39 +276,44 @@ YELLOW_FLAG_SYMPTOMS = [
     "weakness",
     "dizziness",
     "feeling faint",
+    "chronic fatigue",
 
-    # Skin and eyes
-    "skin infection",
-    "boils",
-    "abscess",
-    "pus from wound",
-    "wound not healing",
-    "eye discharge",
-    "red eyes",
-    "eye infection",
+    # ── Blood Sugar & Chronic ──
+    "excessive thirst",
+    "excessive urination",
+    "slow healing wounds",
+    "blurry vision",
+    "unexplained weight gain",
 
-    # Urinary
-    "painful urination",
-    "burning urination",
-    "frequent urination",
-    "blood in urine",
-
-    # Other
-    "headache for days",
-    "persistent headache",
-    "joint pain",
-    "body pain for days",
+    # ── Swelling & Lumps ──
     "swollen glands",
+    "lump in body",
+    "lump in breast",
+    "painless lump",
     "mouth sores",
     "white patches in mouth",
     "thrush",
+
+    # ── Mental Health ──
+    "feeling depressed",
+    "anxiety for weeks",
+    "not sleeping for days",
+    "mood changes",
+    "memory problems",
+    "confusion",
+
+    # ── Elderly Specific ──
+    "frequent falls",
+    "unsteady walking",
+    "sudden memory loss",
+    "incontinence",
 ]
 
 # ──────────────────────────────────────────────────────────
 # GREEN FLAG — Monitor at home with advice
 # ──────────────────────────────────────────────────────────
 GREEN_FLAG_SYMPTOMS = [
-    # Mild fever
+    # ── Mild Fever ──
     "mild fever",
     "low fever",
     "slight fever",
@@ -219,7 +321,7 @@ GREEN_FLAG_SYMPTOMS = [
     "fever since morning",
     "low grade fever",
 
-    # Mild respiratory
+    # ── Mild Respiratory ──
     "mild cold",
     "runny nose",
     "sneezing",
@@ -229,8 +331,9 @@ GREEN_FLAG_SYMPTOMS = [
     "blocked nose",
     "stuffy nose",
     "sore throat",
+    "nasal congestion",
 
-    # Mild skin
+    # ── Mild Skin ──
     "minor skin rash",
     "mild rash",
     "small rash",
@@ -242,8 +345,10 @@ GREEN_FLAG_SYMPTOMS = [
     "minor cut",
     "minor wound",
     "small wound",
+    "dry skin",
+    "dandruff",
 
-    # Mild GI
+    # ── Mild Gastrointestinal ──
     "mild diarrhoea",
     "mild diarrhea",
     "loose motions",
@@ -257,8 +362,9 @@ GREEN_FLAG_SYMPTOMS = [
     "constipation",
     "vomiting once",
     "nausea",
+    "mild bloating",
 
-    # Normal pregnancy
+    # ── Normal Pregnancy Symptoms ──
     "normal pregnancy",
     "morning sickness",
     "mild nausea in pregnancy",
@@ -267,17 +373,29 @@ GREEN_FLAG_SYMPTOMS = [
     "heartburn",
     "fatigue in pregnancy",
 
-    # General mild
+    # ── General Mild / Common ──
     "headache",
     "body pain",
     "muscle pain",
     "tiredness",
     "not sleeping well",
+    "mild fatigue",
+    "mild body pain",
+    "minor eye redness",
+    "watery eyes",
+    "mild allergies",
+
+    # ── Childhood-specific mild ──
     "teething",
     "fussiness",
     "crying more than usual",
     "diaper rash",
-    "minor eye redness",
+    "mild cold in baby",
+
+    # ── Elderly mild ──
+    "mild joint stiffness",
+    "seasonal allergies",
+    "mild back pain",
 ]
 
 
@@ -285,22 +403,40 @@ GREEN_FLAG_SYMPTOMS = [
 # Combination rules (RED flags when symptoms appear together)
 # ──────────────────────────────────────────────────────────
 RED_COMBINATIONS = [
-    # Pregnancy: severe headache + swollen feet + blurred vision → pre-eclampsia
+    # Pre-eclampsia: severe headache + swollen feet + blurred vision
     {
         "name": "Pre-eclampsia signs",
         "requires_all": ["severe headache", "swollen feet", "blurred vision"],
-        "requires_any_count": 2,  # at least 2 of 3 present
+        "requires_any_count": 2,
     },
-    # Dehydration: sunken eyes + skin pinch + not passing urine
+    # Severe dehydration
     {
         "name": "Severe dehydration",
         "requires_all": ["sunken eyes", "skin pinch", "not passing urine"],
         "requires_any_count": 2,
     },
-    # Meningitis signs: fever + stiff neck + not responding
+    # Meningitis signs
     {
         "name": "Meningitis signs",
         "requires_all": ["fever", "stiff neck", "not responding"],
+        "requires_any_count": 2,
+    },
+    # Stroke signs
+    {
+        "name": "Stroke signs",
+        "requires_all": ["facial drooping", "slurred speech", "one sided weakness"],
+        "requires_any_count": 2,
+    },
+    # Heart attack signs
+    {
+        "name": "Heart attack signs",
+        "requires_all": ["chest pain", "sweating", "shortness of breath"],
+        "requires_any_count": 2,
+    },
+    # Diabetic emergency
+    {
+        "name": "Diabetic emergency",
+        "requires_all": ["excessive thirst", "confusion", "fast breathing"],
         "requires_any_count": 2,
     },
 ]
@@ -317,12 +453,12 @@ TRIAGE_LEVELS = {
     },
     "YELLOW": {
         "label": "🟡 YELLOW — NEEDS ATTENTION",
-        "action": "Take patient to Primary Health Centre (PHC) within 48 hours.",
+        "action": "Visit the nearest health facility or doctor within 48 hours.",
         "emoji": "🟡",
     },
     "GREEN": {
         "label": "🟢 GREEN — HOME CARE",
-        "action": "Monitor at home. Give ORS if diarrhoea. Keep child warm. Breastfeed frequently. Come back if symptoms get worse.",
+        "action": "Monitor at home. Stay hydrated, rest well, and eat nutritious food. Come back if symptoms get worse.",
         "emoji": "🟢",
     },
 }
