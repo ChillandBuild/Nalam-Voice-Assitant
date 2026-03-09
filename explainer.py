@@ -2,7 +2,7 @@
 Clinical Explainer — Groq Llama 3.3 70B
 
 Takes English symptoms + triage level and generates a simple
-2-sentence explanation for the ASHA worker.
+2-sentence explanation for the healthcare provider.
 """
 
 import os
@@ -13,19 +13,19 @@ load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-SYSTEM_PROMPT = """You are a clinical assistant for ASHA workers in India.
+SYSTEM_PROMPT = """You are a clinical assistant for healthcare providers in India.
 You will be given patient symptoms and a triage decision (RED, YELLOW, or GREEN).
 
 Write exactly 2 sentences in simple English:
 1. Why this triage level was given
-2. Exactly what the ASHA worker should do next
+2. Exactly what the healthcare provider should do next
 
 Rules:
 - Keep it very simple. No medical jargon.
 - Use short sentences.
 - Be direct and actionable.
 - Do not use bullet points or numbering in your response.
-- Write as if speaking to a village health worker."""
+- Write as if speaking to a healthcare provider."""
 
 
 def generate_explanation(

@@ -1,25 +1,25 @@
 # நலம் Nalam 🩺
 
-**India's Voice-First Health Assistant for ASHA Workers**
+**India's Intelligent Medical Voice Assistant**
 
 > *"Nalam" (நலம்) means "Wellbeing" in Tamil.*  
-> Built by a Tamil Nadu student for every ASHA worker in every Indian state.
+> Built by a Tamil Nadu student to bring healthcare to every Indian state.
 
 ---
 
 ## What It Does
 
-An ASHA worker speaks patient symptoms in **her own language** — Nalam speaks back the triage result **in the same language**. No reading required.
+A user speaks patient symptoms in **their own language** — Nalam speaks back the triage result **in the same language**. No reading required.
 
 ```
-🎙️ ASHA speaks symptoms (any Indian language)
+🎙️ User speaks symptoms (any Indian language)
    ↓ Sarvam Saaras v3 (Speech → Text)
    ↓ Sarvam Mayura (Auto-translate → English)
    ↓ WHO IMNCI Rule Engine (Triage assessment)
    ↓ Groq Llama 3.3 70B (Clinical explanation)
    ↓ Sarvam Mayura (English → Her language)
    ↓ Sarvam Bulbul v3 (Text → Speech)
-🔊 Nalam speaks result back to ASHA worker
+🔊 Nalam speaks result back to the user
 ```
 
 ### Triage Levels
@@ -104,11 +104,11 @@ Nalam/
 
 ## Key Differentiator
 
-- ASHA worker **speaks** in her language
-- Nalam **speaks back** in her language
-- **No reading required** — works for semi-literate health workers
+- User **speaks** in their language
+- Nalam **speaks back** in the same language
+- **No reading required** — works for everyone
 - Covers **all of India** — 10+ languages, auto-detected
 
 ---
 
-*Built with ❤️ from Tamil Nadu for every ASHA worker in India.*
+*Built with ❤️ from Tamil Nadu for healthcare across India.*
