@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2026-03-12T07:04:30.473715+00:00",
+    "triage": "RED",
+    "symptoms": "The child has difficulty breathing and convulsions.",
+    "language": "ta-IN",
+    "sms_sent": false,
+    "phc_number": "+91XXXXXXXXXX",
+    "handoff_note": "PATIENT HANDOFF \u2014 NALAM ALERT\nTime: 2026-03-12T07:04:30.473715+00:00\nSymptoms: \n\u2022 \u0bae\u0bc2\u0b9a\u0bcd\u0b9a\u0bc1\u0ba4\u0bcd\u0ba4\u0bbf\u0ba3\u0bb1\u0bb2\u0bcd\n\u2022 \u0b95\u0bb3\u0b99\u0bcd\u0b95\u0bb3\u0bcd\nUrgency: IMMEDIATE\nReported via: Nalam Voice Triage System\nAction needed: Prepare for emergency respiratory and seizure management."
+  }
+]

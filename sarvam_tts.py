@@ -17,15 +17,15 @@ TTS_URL = "https://api.sarvam.ai/text-to-speech"
 
 # Speaker options by gender
 SPEAKERS = {
-    "female": "anushka",
-    "male": "arvind",
+    "female": "priya",
+    "male": "aditya",
 }
 
 
 def text_to_speech(
     text: str,
     target_language_code: str = "ta-IN",
-    speaker: str = "anushka",
+    speaker: str = "priya",
 ) -> dict:
     """
     Convert text to speech using Sarvam Bulbul v3.

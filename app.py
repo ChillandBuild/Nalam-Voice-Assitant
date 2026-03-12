@@ -2,7 +2,8 @@
 நலம் (Nalam) — India's Medical Voice Assistant
 
 Main Streamlit application connecting all modules:
-Voice Input → STT → Translation → Triage → Explanation → Translation → TTS
+Voice Input → STT → Translation → Triage → Explanation →
+Hallucination Check → Language Safety → Translation → Escalation → TTS
 """
 
 import os
@@ -19,6 +20,11 @@ from sarvam_translate import to_english, from_english, get_language_name, SUPPOR
 from triage_engine import assess_symptoms
 from explainer import generate_explanation
 from sarvam_tts import text_to_speech
+
+# ── Import AI Safety Agents ─────────────────────────────
+from agent_hallucination import check_hallucination
+from agent_safety import check_language_safety
+from agent_escalation import escalate_red_case
 
 # ── Page Configuration ──────────────────────────────────
 st.set_page_config(
@@ -356,10 +362,18 @@ def run_pipeline(symptoms_text: str, detected_language: str = "en-IN"):
     1. Translate to English (if needed)
     2. Triage assessment
     3. Generate explanation
-    4. Translate explanation back
-    5. Generate speech output
+    4. ★ Hallucination check (Agent 1)
+    5. ★ Language safety check (Agent 2)
+    6. Translate explanation back
+    7. ★ Escalation if RED (Agent 3)
+    8. Generate speech output
     """
     steps = st.empty()
+
+    # Agent result trackers
+    hallucination_result = None
+    safety_result = None
+    escalation_result = None
 
     # ── Step 1: Translate to English ────────────────────
     with st.status("🔄 Processing symptoms...", expanded=True) as status:
@@ -394,7 +408,49 @@ def run_pipeline(symptoms_text: str, detected_language: str = "en-IN"):
         explanation = explain_result["explanation"]
         st.write(f"✅ Explanation ready")
 
-        # ── Step 4: Translate Explanation Back ──────────
+        # ── Step 4: ★ Hallucination Check (Agent 1) ────
+        st.write("🛡️ Running hallucination check...")
+        try:
+            hallucination_result = check_hallucination(
+                triage_result["triage_level"], explanation
+            )
+            if hallucination_result["conflict_detected"]:
+                explanation = hallucination_result["final_explanation"]
+                st.write("⚠️ Conflict detected and corrected")
+            else:
+                st.write("✅ No conflict — explanation matches decision")
+        except Exception as e:
+            st.write(f"⚠️ Hallucination check skipped: {e}")
+            hallucination_result = {
+                "conflict_detected": False,
+                "original_explanation": explanation,
+                "final_explanation": explanation,
+                "reason": f"Agent error: {e}",
+                "time_taken": 0,
+            }
+
+        # ── Step 5: ★ Language Safety Check (Agent 2) ──
+        st.write("🛡️ Running language safety check...")
+        try:
+            safety_result = check_language_safety(
+                explanation, triage_result["triage_level"], detected_language
+            )
+            if safety_result["rewrite_needed"]:
+                explanation = safety_result["final_explanation"]
+                st.write("⚠️ Simplified for ASHA readability")
+            else:
+                st.write("✅ Language is clear and appropriate")
+        except Exception as e:
+            st.write(f"⚠️ Language safety check skipped: {e}")
+            safety_result = {
+                "rewrite_needed": False,
+                "problems": [f"Agent error: {e}"],
+                "final_explanation": explanation,
+                "original_explanation": explanation,
+                "time_taken": 0,
+            }
+
+        # ── Step 6: Translate Explanation Back ──────────
         translated_explanation = ""
         if detected_language and detected_language != "en-IN":
             st.write(f"🌐 Translating to {get_language_name(detected_language)}...")
@@ -405,7 +461,32 @@ def run_pipeline(symptoms_text: str, detected_language: str = "en-IN"):
             else:
                 st.write("⚠️ Back-translation failed")
 
-        # ── Step 5: Generate Speech ─────────────────────
+        # ── Step 7: ★ Escalation if RED (Agent 3) ──────
+        st.write("🛡️ Checking escalation status...")
+        try:
+            escalation_result = escalate_red_case(
+                symptoms_english=english_text,
+                symptoms_original_language=symptoms_text,
+                triage_decision=triage_result["triage_level"],
+                explanation=explanation,
+                detected_language=detected_language,
+            )
+            if escalation_result["escalated"]:
+                st.write("🚨 RED ALERT — Case escalated")
+            else:
+                st.write("✅ No escalation needed")
+        except Exception as e:
+            st.write(f"⚠️ Escalation check skipped: {e}")
+            escalation_result = {
+                "escalated": False,
+                "sms_sent": False,
+                "handoff_note": None,
+                "timestamp": "",
+                "error": f"Agent error: {e}",
+                "time_taken": 0,
+            }
+
+        # ── Step 8: Generate Speech ─────────────────────
         audio_bytes = None
         speak_text = translated_explanation if translated_explanation else explanation
         speak_lang = detected_language if detected_language and detected_language != "en-IN" else "en-IN"
@@ -426,6 +507,9 @@ def run_pipeline(symptoms_text: str, detected_language: str = "en-IN"):
     display_triage_result(triage_result, explanation, translated_explanation)
     display_symptoms(triage_result)
 
+    # ── 🛡️ Safety Checks Panel ─────────────────────────
+    _display_safety_checks(hallucination_result, safety_result, escalation_result)
+
     # ── Play Audio ──────────────────────────────────────
     if audio_bytes:
         st.markdown("---")
@@ -437,7 +521,69 @@ def run_pipeline(symptoms_text: str, detected_language: str = "en-IN"):
         "triage": triage_result,
         "explanation": explanation,
         "translated_explanation": translated_explanation,
+        "hallucination_check": hallucination_result,
+        "safety_check": safety_result,
+        "escalation": escalation_result,
     }
+
+
+def _display_safety_checks(hallucination_result, safety_result, escalation_result):
+    """Display the agent safety checks panel below triage results."""
+    st.markdown("---")
+    st.markdown("### 🛡️ Safety Checks")
+
+    # ── Hallucination Check ─────────────────────────────
+    if hallucination_result:
+        if hallucination_result.get("conflict_detected"):
+            st.markdown(
+                f"⚠️ **Hallucination Check** — Conflict detected and corrected  \n"
+                f"*Reason: {hallucination_result.get('reason', 'N/A')}*"
+            )
+            with st.expander("View original vs corrected explanation"):
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown("**❌ Original (unsafe)**")
+                    st.info(hallucination_result.get("original_explanation", ""))
+                with col2:
+                    st.markdown("**✅ Corrected (safe)**")
+                    st.success(hallucination_result.get("final_explanation", ""))
+        else:
+            st.markdown("✅ **Hallucination Check** — No conflict detected")
+    else:
+        st.markdown("⏭️ **Hallucination Check** — Skipped")
+
+    # ── Language Safety Check ───────────────────────────
+    if safety_result:
+        if safety_result.get("rewrite_needed"):
+            problems_str = ", ".join(safety_result.get("problems", []))
+            st.markdown(
+                f"⚠️ **Language Safety** — Rewritten for ASHA clarity  \n"
+                f"*Issues: {problems_str}*"
+            )
+            with st.expander("View original vs simplified explanation"):
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown("**❌ Original (complex)**")
+                    st.info(safety_result.get("original_explanation", ""))
+                with col2:
+                    st.markdown("**✅ Simplified (ASHA-ready)**")
+                    st.success(safety_result.get("final_explanation", ""))
+        else:
+            st.markdown("✅ **Language Safety** — Clear and appropriate")
+    else:
+        st.markdown("⏭️ **Language Safety** — Skipped")
+
+    # ── Escalation Check ────────────────────────────────
+    if escalation_result:
+        if escalation_result.get("escalated"):
+            st.markdown("🚨 **Escalation** — RED case logged and escalated")
+            if escalation_result.get("handoff_note"):
+                with st.expander("View patient handoff note"):
+                    st.code(escalation_result["handoff_note"], language=None)
+        else:
+            st.markdown("✅ **Escalation** — No escalation needed")
+    else:
+        st.markdown("⏭️ **Escalation** — Skipped")
 
 
 # ████████████████████████████████████████████████████████
@@ -592,7 +738,7 @@ with tab_text:
 # ── Sidebar Info ────────────────────────────────────────
 with st.sidebar:
     st.markdown("### 🩺 நலம் Nalam")
-    st.markdown("**Version:** 1.0")
+    st.markdown("**Version:** 2.0 — with AI Safety Agents")
     st.markdown("**Built for:** Healthcare across India")
     st.markdown("---")
 

@@ -1,0 +1,76 @@
+[
+  {
+    "agent": "language_safety",
+    "timestamp": "2026-03-12T07:04:29.685843+00:00",
+    "triage_level": "RED",
+    "original_explanation": "This patient is RED because they are having big problems breathing and their body is shaking in a way that is very scary and needs help right now. The healthcare provider should call for emergency help and try to keep the child calm and safe until more medical help arrives.",
+    "rewritten_explanation": "This patient is very sick. They are having trouble breathing and their body is shaking. Call for emergency help NOW. Hold the child gently and talk softly to help them feel calm. Take the patient to hospital NOW.",
+    "problems_found": [
+      "Medical jargon not explicitly used but 'big problems breathing' and 'body is shaking in a way that is very scary' may cause panic",
+      "Vague instructions: 'try to keep the child calm and safe'"
+    ]
+  },
+  {
+    "agent": "escalation",
+    "timestamp": "2026-03-12T07:04:30.473715+00:00",
+    "triage": "RED",
+    "symptoms": "The child has difficulty breathing and convulsions.",
+    "sms_sent": false,
+    "escalated": true
+  },
+  {
+    "agent": "language_safety",
+    "timestamp": "2026-03-12T07:14:30.944307+00:00",
+    "triage_level": "GREEN",
+    "original_explanation": "Sahanapriya's symptoms are not very serious, so she gets a GREEN triage level. The healthcare provider should now ask her more questions and give her some medicine to make her fever and headache go away.",
+    "rewritten_explanation": "Sahanapriya's symptoms are not very serious. Ask her more questions. Give her medicine for fever and headache. Tell her to rest at home and drink water.",
+    "problems_found": [
+      "Medical jargon not explicitly used but 'triage level' might be unfamiliar",
+      "Vague instructions"
+    ]
+  },
+  {
+    "agent": "language_safety",
+    "timestamp": "2026-03-12T07:26:06.274056+00:00",
+    "triage_level": "YELLOW",
+    "original_explanation": "This patient got a YELLOW triage because they are very sick and need help soon, but their life is not in danger right now. The healthcare provider should do some tests and give medicine to make the patient feel better, and also call a specialist doctor to come and help with the brain damage.",
+    "rewritten_explanation": "This patient is very sick and needs help soon. Take them to the health centre in 1-2 days. The doctor will do some tests and give medicine to make the patient feel better. The doctor will also call a specialist for more help.",
+    "problems_found": [
+      "Medical jargon: 'brain damage'",
+      "Panic language: 'brain damage'"
+    ]
+  },
+  {
+    "agent": "language_safety",
+    "timestamp": "2026-03-12T07:41:04.678571+00:00",
+    "triage_level": "GREEN",
+    "original_explanation": "The patient was given a GREEN triage level because their symptoms are not very serious and they can still walk, even if it's not very far. The healthcare provider should now ask the patient more questions to understand their headache and other pains, and then give them some advice on what to do to feel better.",
+    "rewritten_explanation": "The patient is not very sick. They can walk, even if it's not very far. Now, ask the patient about their headache and other pains. Give them water and tell them to rest at home. If the pain gets worse, they should go to the health centre.",
+    "problems_found": [
+      "Medical jargon not explicitly used but 'triage level' might be unfamiliar",
+      "Vague instructions"
+    ]
+  },
+  {
+    "agent": "language_safety",
+    "timestamp": "2026-03-12T07:42:24.443654+00:00",
+    "triage_level": "GREEN",
+    "original_explanation": "The child was given a GREEN triage level because the mild fever is not very serious and the child is likely not in danger. The healthcare provider should give advice to the child's parents on how to care for the child at home, such as giving medicine to reduce the fever and plenty of fluids to drink.",
+    "rewritten_explanation": "The child has a mild fever. Give the child medicine to reduce the fever. Give the child plenty of water to drink. Let the child rest at home. If the fever gets worse, go to the health centre.",
+    "problems_found": [
+      "Medical jargon: 'triage level', 'healthcare provider'",
+      "Vague instructions: 'give advice', 'care for the child at home'"
+    ]
+  },
+  {
+    "agent": "language_safety",
+    "timestamp": "2026-03-12T07:42:55.091214+00:00",
+    "triage_level": "GREEN",
+    "original_explanation": "The patient is given a GREEN triage level because the child has only a mild fever and no other serious symptoms. The healthcare provider should now give advice on home care and tell the parent to monitor the child's temperature and come back if the fever gets worse.",
+    "rewritten_explanation": "The child has a mild fever. Give the child water and rest at home. Check the child's temperature twice a day. If the fever gets worse, go to the health centre.",
+    "problems_found": [
+      "Medical jargon: 'triage level'",
+      "Vague instructions: 'monitor the child's temperature'"
+    ]
+  }
+]
